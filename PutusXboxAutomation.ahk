@@ -69,6 +69,17 @@ HumanClickMedSlow(x, y, variance := 10) {
     Sleep(RandInt(25, 70))
 }
 
+directClick(x, y, variance := 3) {
+    tx := RandOff(x, variance)
+    ty := RandOff(y, variance)
+    MouseMove(tx, ty, 0)
+    Sleep(RandInt(8, 20))
+    Send("{LButton down}")
+    Sleep(RandInt(8, 18))
+    Send("{LButton up}")
+    Sleep(RandInt(10, 30))
+}
+
 ; ────────────────────────────────────────────────────────────
 ;  CTRL+G — RUN SNIPPET (Dev Console)
 ; ────────────────────────────────────────────────────────────
@@ -131,6 +142,46 @@ HumanClickMedSlow(x, y, variance := 10) {
     HumanClickMedSlow(1494, 377, 9)
     RandSleep(60, 140)
     HumanClickMedSlow(1494, 377, 9)
+}
+
+; ────────────────────────────────────────────────────────────
+;  CTRL+D — done in sheets kalo status di atasnya "Done"
+; ────────────────────────────────────────────────────────────
+$^d:: {
+    directClick(814,18)
+    Sleep(100)
+    Send("{Left}")
+    Sleep(100)
+    Send("{Left}")
+    Sleep(200)
+    Send("^{d}")
+    Sleep(200)
+    Send("^{Left}")
+    Sleep(200)
+    Send("{Space}")
+}
+
+; ────────────────────────────────────────────────────────────
+;  CTRL+3 — done in sheets kalo status di atasnya "Belom"
+; ────────────────────────────────────────────────────────────
+^e:: {
+    directClick(814,18)
+    Sleep(100)
+    Send("{Left}")
+    Sleep(100)
+    Send("{Left}")
+    Sleep(100)
+    Send("d")
+    Sleep(300)
+    Send("{Down}")
+    Sleep(200)
+    Send("{Enter}")
+    Sleep(200)
+    Send("{Up}")
+    Sleep(50)
+    Send("^{Left}")
+    Sleep(200)
+    Send("{Space}")
 }
 
 ; ────────────────────────────────────────────────────────────
