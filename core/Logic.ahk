@@ -41,12 +41,14 @@ CopyBackupCodes() {
 FillBackupCodeOnly() {
     global COORD, CFG
 
-    ; ── Step 1: Buka Win+V & klik BC ke-3 ──────────────────
+    ; ── Step 1: Buka Win+V & klik BC ke-1 ──────────────────
     HumanClick(COORD["winv_focus_x"],     COORD["winv_focus_y"])
     Delay()
     HumanClick(COORD["bc_input_focus_x"], COORD["bc_input_focus_y"])
     Delay()
     HumanClick(COORD["bc_input_x"],       COORD["bc_input_y"])
+    Delay()
+    HumanClick(COORD["invalidbcform_x"],     COORD["invalidbcform_y"])
     Delay()
     Send("#v")
     Sleep(CFG["winv_delay"])
@@ -174,8 +176,77 @@ BCAuthen() {
     Delay()
     HumanClick(COORD["authen_bc_opt_x"], COORD["authen_bc_opt_y"])
     Delay()
-    FillBackupCodeOnly()                              ; ← ganti dari manual Send/Win+V/klik
-    Log("🔄 Backup code diisi via Authen")
+    Send("#v")
+    Sleep(CFG["winv_delay"])
+    DirectClick(COORD["bc_random1_x"], COORD["bc_random1_y"])
+    Sleep(CFG["winv_delay"])
+    Send("{Enter}")
+
+    ; Cek invalid
+    if !WaitForInvalidBC(2000) {
+        Send("{Enter}")
+        Log("✅ Backup code #1 diterima")
+        Sleep(CFG["incompat_wait"])
+        if CheckIncompatible() {
+            Log("⚠️ Incompatible terdeteksi")
+            if AmbilPasswordDanPaste() {
+                if WaitForTwoStepPage() {
+                    Delay()
+                    ProsesBackupCode()
+                } else
+                    Log("❌ 2FA tidak terdeteksi")
+            } else
+                Log("❌ Gagal ambil password")
+        } else
+            Log("✅ Selesai")
+        return
+    }
+    Log("⚠️ Backup code #1 invalid, coba #2...")
+
+    ; ── Step 2: Clear & klik BC ke-2 ────────────────────────
+    HumanDoubleClick(COORD["invalidbcform_x"], COORD["invalidbcform_y"], 2)
+    Sleep(200)
+    Send("#v")
+    Sleep(CFG["winv_delay"])
+    DirectClick(COORD["bc_random2_x"], COORD["bc_random2_y"])
+    Sleep(CFG["winv_delay"])
+    Send("{Enter}")
+
+    if !WaitForInvalidBC(2000) {
+        Send("{Enter}")
+        Log("✅ Backup code #2 diterima")
+        Sleep(CFG["incompat_wait"])
+        if CheckIncompatible() {
+            Log("⚠️ Incompatible terdeteksi")
+            if AmbilPasswordDanPaste() {
+                if WaitForTwoStepPage() {
+                    Delay()
+                    ProsesBackupCode()
+                } else
+                    Log("❌ 2FA tidak terdeteksi")
+            } else
+                Log("❌ Gagal ambil password")
+        } else
+            Log("✅ Selesai")
+        return
+    }
+    Log("⚠️ Backup code #2 invalid, coba #3...")
+
+    ; ── Step 3: Clear & klik BC ke-3 ────────────────────────
+    HumanDoubleClick(COORD["invalidbcform_x"], COORD["invalidbcform_y"], 2)
+    Sleep(200)
+    Send("#v")
+    Sleep(CFG["winv_delay"])
+    DirectClick(COORD["bc_random3_x"], COORD["bc_random3_y"])
+    Sleep(CFG["winv_delay"])
+    Send("{Enter}")
+
+    if WaitForInvalidBC(2000) {
+        Log("❌ Semua backup code invalid!")
+        return
+    }
+    Log("✅ Backup code #3 diterima")
+
     Sleep(CFG["incompat_wait"])
     if CheckIncompatible() {
         Log("⚠️ Incompatible terdeteksi")
@@ -196,13 +267,13 @@ DoLoginClipboard() {
     HumanClick(COORD["login_focus_x"], COORD["login_focus_y"])
     Delay()
     HumanClick(COORD["login_pass_x"],  COORD["login_pass_y"])
-    RandSleep(350, 450)
+    Delay()
     HumanClick(COORD["login_user_x"],  COORD["login_user_y"])
-    RandSleep(200, 250)
-    HumanDoubleClick(COORD["login_user_x"], COORD["login_user_y"], 2)
-    Sleep(200)
+    Delay()
     Send("^a")
-    Sleep(200)
+    Delay()
+    Send("^a")
+    Delay()
     Send("{Backspace}")
     Delay()
     Send("#v")
@@ -210,11 +281,11 @@ DoLoginClipboard() {
     DirectClick(COORD["login_submit1_x"], COORD["login_submit1_y"])
     Delay()
     HumanClick(COORD["login_pass_x"],  COORD["login_pass_y"])
-    RandSleep(100, 150)
-    HumanDoubleClick(COORD["login_pass_x"], COORD["login_pass_y"], 2)
-    Sleep(200)
+    Delay()
     Send("^a")
-    Sleep(200)
+    Delay()
+    Send("^a")
+    Delay()
     Send("{Backspace}")
     Delay()
     Send("#v")
@@ -242,13 +313,13 @@ DoLoginWebsite() {
     HumanClick(COORD["login_focus_x"], COORD["login_focus_y"])
     Delay()
     HumanClick(COORD["login_pass_x"],  COORD["login_pass_y"])
-    RandSleep(350, 450)
+    Delay()
     HumanClick(COORD["login_user_x"],  COORD["login_user_y"])
-    RandSleep(150, 200)
-    HumanDoubleClick(COORD["login_user_x"], COORD["login_user_y"], 2)
-    Sleep(200)
+    Delay()
     Send("^a")
-    Sleep(200)
+    Delay()
+    Send("^a")
+    Delay()
     Send("{Backspace}")
     Delay()
     Send("#v")
@@ -256,11 +327,11 @@ DoLoginWebsite() {
     DirectClick(COORD["login_submit1_x"], COORD["login_submit1_y"])
     Delay()
     HumanClick(COORD["login_pass_x"],  COORD["login_pass_y"])
-    RandSleep(100, 150)
-    HumanDoubleClick(COORD["login_pass_x"], COORD["login_pass_y"], 2)
-    Sleep(200)
+    Delay()
     Send("^a")
-    Sleep(200)
+    Delay()
+    Send("^a")
+    Delay()
     Send("{Backspace}")
     Delay()
     Send("#v")
@@ -305,8 +376,6 @@ PastePwClipboardWeb() {
     Delay()
     ProsesBackupCodeWeb()
 }
-
-
 
 CopyBCWebsite() {
     global COORD
@@ -389,7 +458,48 @@ BCWithIncompat() {
     Delay()
     HumanClick(COORD["incompat_bc_x"],    COORD["incompat_bc_y"])
     Delay()
-    FillBackupCodeOnly()                              ; ← ganti dari manual Send/WinV/klik
+    HumanClick(COORD["retrybc_input_x"],  COORD["retrybc_input_y"])
+    Delay()
+    Send("#v")
+    Sleep(CFG["winv_delay"])
+    DirectClick(COORD["bc_random1_x"], COORD["bc_random1_y"])
+    Sleep(CFG["winv_delay"])
+    Send("{Enter}")
+
+    ; Cek invalid
+    if !WaitForInvalidBC(2000) {
+        Send("{Enter}")
+        Log("✅ Backup code #1 diterima")
+        return
+    }
+    Log("⚠️ Backup code #1 invalid, coba #2...")
+
+    ; ── Step 2: Clear & klik BC ke-1 ────────────────────────
+    HumanDoubleClick(COORD["invalidbcform_x"], COORD["invalidbcform_y"], 2)
+    Sleep(200)
+    Send("#v")
+    Sleep(CFG["winv_delay"])
+    DirectClick(COORD["bc_random2_x"], COORD["bc_random2_y"])
+    Sleep(CFG["winv_delay"])
+    Send("{Enter}")
+
+    ; Cek invalid
+    if !WaitForInvalidBC(2000) {
+        Send("{Enter}")
+        Log("✅ Backup code #2 diterima")
+        return
+    }
+    Log("⚠️ Backup code #2 invalid, coba #3...")
+
+    ; ── Step 3: Clear & klik BC ke-2 ────────────────────────
+    HumanDoubleClick(COORD["invalidbcform_x"], COORD["invalidbcform_y"], 2)
+    Sleep(200)
+    Send("#v")
+    Sleep(CFG["winv_delay"])
+    DirectClick(COORD["bc_random3_x"], COORD["bc_random3_y"])
+    Sleep(CFG["winv_delay"])
+    Send("{Enter}")
+
     if !WaitForIncompatible(3000) {
         Log("✅ Selesai, tidak ada incompatible")
         return
@@ -409,7 +519,79 @@ BCWithIncompat() {
 }
 
 DoProsesBC1() {
+    global COORD, CFG
     CopyBackupCodes()
+    HumanClick(COORD["winv_focus_x"],     COORD["winv_focus_y"])
+    Delay()
+    HumanClick(COORD["bc_input_focus_x"], COORD["bc_input_focus_y"])
+    Delay()
+    HumanClick(COORD["bc_input_x"],       COORD["bc_input_y"])
+    Delay()
+    Send("#v")
+    Sleep(CFG["winv_delay"])
+    DirectClick(COORD["bc_random1_x"], COORD["bc_random1_y"])
+    Sleep(CFG["winv_delay"])
+    Send("{Enter}")
+
+    ; Cek invalid
+    if !WaitForInvalidBC(2000) {
+        Send("{Enter}")
+        Log("✅ Backup code #1 diterima")
+        if !WaitForIncompatible(3000) {
+            Log("✅ Selesai, tidak ada incompatible")
+            return
+        }
+    } else {
+        Log("⚠️ Backup code #1 invalid, coba #2...")
+
+        ; ── Step 2: Clear & klik BC ke-2 ────────────────────
+        HumanDoubleClick(COORD["invalidbcform_x"], COORD["invalidbcform_y"], 2)
+        Sleep(200)
+        Send("#v")
+        Sleep(CFG["winv_delay"])
+        DirectClick(COORD["bc_random2_x"], COORD["bc_random2_y"])
+        Sleep(CFG["winv_delay"])
+        Send("{Enter}")
+
+        if !WaitForInvalidBC(2000) {
+            Send("{Enter}")
+            Log("✅ Backup code #2 diterima")
+            if !WaitForIncompatible(3000) {
+                Log("✅ Selesai, tidak ada incompatible")
+                return
+            }
+        } else {
+            Log("⚠️ Backup code #2 invalid, coba #3...")
+
+            ; ── Step 3: Clear & klik BC ke-3 ────────────────
+            HumanDoubleClick(COORD["invalidbcform_x"], COORD["invalidbcform_y"], 2)
+            Sleep(200)
+            Send("#v")
+            Sleep(CFG["winv_delay"])
+            DirectClick(COORD["bc_random3_x"], COORD["bc_random3_y"])
+            Sleep(CFG["winv_delay"])
+            Send("{Enter}")
+
+            if WaitForInvalidBC(2000) {
+                Log("❌ Semua backup code invalid!")
+                return
+            }
+            Log("✅ Backup code #3 diterima")
+        }
+    }
+
+    ; Kalau masih incompatible
+    Log("⚠️ Incompatible terdeteksi")
+    if !AmbilPasswordDanPaste() {
+        Log("❌ Gagal ambil password")
+        return
+    }
+    CopyBackupCodes()
+    if !WaitForTwoStepPage() {
+        Log("❌ 2FA tidak terdeteksi")
+        return
+    }
+    Delay()
     ProsesBackupCode()
 }
 
@@ -429,7 +611,48 @@ BCWithIncompatWeb() {
     Delay()
     HumanClick(COORD["incompat_bc_x"],    COORD["incompat_bc_y"])
     Delay()
-    FillBackupCodeOnly()                              ; ← ganti dari manual
+    HumanClick(COORD["retrybc_input_x"],  COORD["retrybc_input_y"])
+    Delay()
+    Send("#v")
+    Sleep(CFG["winv_delay"])
+    DirectClick(COORD["bc_random1_x"], COORD["bc_random1_y"])
+    Sleep(CFG["winv_delay"])
+    Send("{Enter}")
+
+    ; Cek invalid
+    if !WaitForInvalidBC(2000) {
+        Send("{Enter}")
+        Log("✅ Backup code #1 diterima")
+        return
+    }
+    Log("⚠️ Backup code #1 invalid, coba #2...")
+
+    ; ── Step 2: Clear & klik BC ke-2 ────────────────────────
+    HumanDoubleClick(COORD["invalidbcform_x"], COORD["invalidbcform_y"], 2)
+    Sleep(200)
+    Send("#v")
+    Sleep(CFG["winv_delay"])
+    DirectClick(COORD["bc_random2_x"], COORD["bc_random2_y"])
+    Sleep(CFG["winv_delay"])
+    Send("{Enter}")
+
+    ; Cek invalid
+    if !WaitForInvalidBC(2000) {
+        Send("{Enter}")
+        Log("✅ Backup code #2 diterima")
+        return
+    }
+    Log("⚠️ Backup code #2 invalid, coba #3...")
+
+    ; ── Step 3: Clear & klik BC ke-3 ────────────────────────
+    HumanDoubleClick(COORD["invalidbcform_x"], COORD["invalidbcform_y"], 2)
+    Sleep(200)
+    Send("#v")
+    Sleep(CFG["winv_delay"])
+    DirectClick(COORD["bc_random3_x"], COORD["bc_random3_y"])
+    Sleep(CFG["winv_delay"])
+    Send("{Enter}")
+    
     if !WaitForIncompatible(3000) {
         Log("✅ Selesai, tidak ada incompatible")
         return
@@ -452,8 +675,74 @@ BCAuthenWeb() {
     Delay()
     HumanClick(COORD["authen_bc_opt_x"], COORD["authen_bc_opt_y"])
     Delay()
-    FillBackupCodeOnly()                              ; ← ganti dari manual
-    Log("🔄 Backup code diisi via Authen (Web)")
+    Send("#v")
+    Sleep(CFG["winv_delay"])
+    DirectClick(COORD["bc_random1_x"], COORD["bc_random1_y"])
+    Sleep(CFG["winv_delay"])
+    Send("{Enter}")
+
+    ; Cek invalid
+    if !WaitForInvalidBC(2000) {
+        Send("{Enter}")
+        Log("✅ Backup code #1 diterima")
+        Sleep(CFG["incompat_wait"])
+        if CheckIncompatible() {
+            Log("⚠️ Incompatible terdeteksi")
+            PastePwClipboard()
+            if WaitForTwoStepPage() {
+                Delay()
+                ProsesBackupCodeWeb()
+            } else
+                Log("❌ 2FA tidak terdeteksi")
+        } else
+            Log("✅ Selesai")
+        return
+    }
+    Log("⚠️ Backup code #1 invalid, coba #2...")
+
+    ; ── Step 2: Clear & klik BC ke-2 ────────────────────────
+    HumanDoubleClick(COORD["invalidbcform_x"], COORD["invalidbcform_y"], 2)
+    Sleep(200)
+    Send("#v")
+    Sleep(CFG["winv_delay"])
+    DirectClick(COORD["bc_random2_x"], COORD["bc_random2_y"])
+    Sleep(CFG["winv_delay"])
+    Send("{Enter}")
+
+    ; Cek invalid
+    if !WaitForInvalidBC(2000) {
+        Send("{Enter}")
+        Log("✅ Backup code #2 diterima")
+        Sleep(CFG["incompat_wait"])
+        if CheckIncompatible() {
+            Log("⚠️ Incompatible terdeteksi")
+            PastePwClipboard()
+            if WaitForTwoStepPage() {
+                Delay()
+                ProsesBackupCodeWeb()
+            } else
+                Log("❌ 2FA tidak terdeteksi")
+        } else
+            Log("✅ Selesai")
+        return
+    }
+    Log("⚠️ Backup code #2 invalid, coba #3...")
+
+    ; ── Step 3: Clear & klik BC ke-3 ────────────────────────
+    HumanDoubleClick(COORD["invalidbcform_x"], COORD["invalidbcform_y"], 2)
+    Sleep(200)
+    Send("#v")
+    Sleep(CFG["winv_delay"])
+    DirectClick(COORD["bc_random3_x"], COORD["bc_random3_y"])
+    Sleep(CFG["winv_delay"])
+    Send("{Enter}")
+
+    if WaitForInvalidBC(2000) {
+        Log("❌ Semua backup code invalid!")
+        return
+    }
+    Log("✅ Backup code #3 diterima")
+
     Sleep(CFG["incompat_wait"])
     if CheckIncompatible() {
         Log("⚠️ Incompatible terdeteksi")
@@ -475,11 +764,11 @@ DoLoginClipboardWeb() {
     HumanClick(COORD["login_pass_x"],  COORD["login_pass_y"])
     RandSleep(350, 450)
     HumanClick(COORD["login_user_x"],  COORD["login_user_y"])
-    RandSleep(200, 250)
-    HumanDoubleClick(COORD["login_user_x"], COORD["login_user_y"], 2)
-    Sleep(200)
+    Delay()
     Send("^a")
-    Sleep(200)
+    Delay()
+    Send("^a")
+    Delay()
     Send("{Backspace}")
     Delay()
     Send("#v")
@@ -487,11 +776,11 @@ DoLoginClipboardWeb() {
     DirectClick(COORD["login_submit1_x"], COORD["login_submit1_y"])
     Delay()
     HumanClick(COORD["login_pass_x"],  COORD["login_pass_y"])
-    RandSleep(200, 250)
-    HumanDoubleClick(COORD["login_pass_x"], COORD["login_pass_y"], 2)
-    Sleep(200)
+    Delay()
     Send("^a")
-    Sleep(200)
+    Delay()
+    Send("^a")
+    Delay()
     Send("{Backspace}")
     Delay()
     Send("#v")
@@ -538,7 +827,7 @@ BeliRobux(imageName, label) {
 
                         ; Step 4: Cek popup Don't Buy (tunggu sampai 5 detik)
             if WaitForDontBuy(5000) {
-                Log("⚠️ Berhasil tidak mempurchase, silakan review manual")
+                Log("⚠️ Terdeteksi, silakan review manual")
             } else {
                 Log("ℹ️ Pop-up tidak terdeteksi, tidak ada pembelian terjadi")
             }

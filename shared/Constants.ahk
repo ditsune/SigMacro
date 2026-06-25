@@ -43,6 +43,8 @@ global COORD := Map(
     ; ── 2FA / BC FLOW ─────────────────────────────────────────
     "bc_input_focus_x", 1437,
     "bc_input_focus_y", 579,
+    "retrybc_input_x",     1389,
+    "retrybc_input_y",     409,
     "bc_input_x",       1458,
     "bc_input_y",       470,
     "bc_random1_x",     1401,

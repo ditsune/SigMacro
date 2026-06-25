@@ -95,7 +95,7 @@ MakeBtn(x, y, w, label) {
 {
     c := []
     c.Push(MakeSection(98,  "LOGIN (WEB)")*)
-    c.Push(MakeBtn(22,  118, 178, "Login Clipboard"))   ; idx 3
+    c.Push(MakeBtn(22,  118, 178, "Login Clipboard Web"))   ; idx 3
     c.Push(MakeBtn(206, 118, 178, "Login Website"))     ; idx 4
     c.Push(MakeBtn(22,  154, 178, "PW Web"))            ; idx 5
 
@@ -116,7 +116,7 @@ MakeBtn(x, y, w, label) {
     c.Push(MakeBtn(114, 370,  86, "✕ Exit"))            ; idx 21
     c.Push(MakeBtn(206, 370, 178, "⚙ Settings"))        ; idx 22
 
-    c[3].OnEvent("Click",  (*) => GuiAction("Login Clipboard", DoLoginClipboardWeb))
+    c[3].OnEvent("Click",  (*) => GuiAction("Login Clipboard Web", DoLoginClipboardWeb))
     c[4].OnEvent("Click",  (*) => GuiAction("Login Website",   DoLoginWebsite))
     c[5].OnEvent("Click",  (*) => GuiAction("PW Web",          PastePwClipboard))
     c[8].OnEvent("Click",  (*) => GuiAction("BC Email Web",   DoProsesBC1Web))
@@ -138,13 +138,13 @@ MakeBtn(x, y, w, label) {
 {
     c := []
     c.Push(MakeSection(98,  "LOGIN (TELE)")*)
-    c.Push(MakeBtn(22,  118, 178, "Login Clipboard"))   ; idx 3
+    c.Push(MakeBtn(22,  118, 178, "Login Clipboard Tele"))   ; idx 3
     c.Push(MakeBtn(206, 118, 178, "PW Tele"))           ; idx 4
 
     c.Push(MakeSection(158, "BACKUP CODE (TELE)")*)
     c.Push(MakeBtn(22,  178, 178, "BC Email Tele"))     ; idx 7
     c.Push(MakeBtn(206, 178, 178, "BC Retry Tele"))     ; idx 8
-    c.Push(MakeBtn(22,  214, 178, "BC Authen"))         ; idx 9
+    c.Push(MakeBtn(22,  214, 178, "BC Authen Tele"))         ; idx 9
     c.Push(MakeBtn(206, 214, 178, "Copy BC"))           ; idx 10
 
     c.Push(MakeSection(254, "ROBUX PURCHASE")*)
@@ -158,7 +158,7 @@ MakeBtn(x, y, w, label) {
     c.Push(MakeBtn(114, 334,  86, "✕ Exit"))            ; idx 20
     c.Push(MakeBtn(206, 334, 178, "⚙ Settings"))        ; idx 21
 
-    c[3].OnEvent("Click",  (*) => GuiAction("Login Clipboard", DoLoginClipboard))
+    c[3].OnEvent("Click",  (*) => GuiAction("Login Clipboard Tele", DoLoginClipboard))
     c[4].OnEvent("Click",  (*) => GuiAction("PW Tele",         PwdThenBC))
     c[7].OnEvent("Click",  (*) => GuiAction("BC Email Tele",   DoProsesBC1))
     c[8].OnEvent("Click",  (*) => GuiAction("BC Retry Tele",   BCWithIncompat))
@@ -179,13 +179,13 @@ MakeBtn(x, y, w, label) {
 {
     c := []
     c.Push(MakeSection(98,  "LOGIN")*)
-    c.Push(MakeBtn(22,  118, 178, "Login Clipboard"))   ; idx 3
+    c.Push(MakeBtn(22,  118, 178, "Login Clipboard Tele"))   ; idx 3
     c.Push(MakeBtn(206, 118, 178, "Login Website"))     ; idx 4
 
     c.Push(MakeSection(158, "BACKUP CODE (TELE)")*)
     c.Push(MakeBtn(22,  178, 178, "BC Email"))          ; idx 7
     c.Push(MakeBtn(206, 178, 178, "BC Retry"))          ; idx 8
-    c.Push(MakeBtn(22,  214, 178, "BC Authen"))         ; idx 9
+    c.Push(MakeBtn(22,  214, 178, "BC Authen Tele"))         ; idx 9
     c.Push(MakeBtn(206, 214, 178, "Copy BC"))           ; idx 10
 
     c.Push(MakeSection(248, "BACKUP CODE (WEB)")*)       ; ← 258 → 248
@@ -199,7 +199,7 @@ MakeBtn(x, y, w, label) {
     c.Push(MakeBtn(114, 358,  86, "✕ Exit"))            ; ← 378 → 358
     c.Push(MakeBtn(206, 358, 178, "⚙ Settings"))        ; ← 378 → 358
 
-    c[3].OnEvent("Click",  (*) => GuiAction("Login Clipboard", DoLoginClipboard))
+    c[3].OnEvent("Click",  (*) => GuiAction("Login Clipboard Tele", DoLoginClipboard))
     c[4].OnEvent("Click",  (*) => GuiAction("Login Website",   DoLoginWebsite))
     c[7].OnEvent("Click",  (*) => GuiAction("BC Email Tele",   DoProsesBC1))
     c[8].OnEvent("Click",  (*) => GuiAction("BC Retry Tele",   BCWithIncompat))
