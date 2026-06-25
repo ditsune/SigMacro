@@ -529,12 +529,19 @@ BeliRobux(imageName, label) {
     Sleep(2000)
 
     ; Step 3: Cari item dengan scroll
-    maxScroll := 12
+    maxScroll := 3
     loop maxScroll {
         if FindRobuxItem(imageName, &ix, &iy) {
             Log("✅ " label " ditemukan di " ix ", " iy)
             HumanClick(ix + 577, iy + 22)
             Log("🛒 Klik Purchase " label)
+
+                        ; Step 4: Cek popup Don't Buy (tunggu sampai 5 detik)
+            if WaitForDontBuy(5000) {
+                Log("⚠️ Berhasil tidak mempurchase, silakan review manual")
+            } else {
+                Log("ℹ️ Pop-up tidak terdeteksi, tidak ada pembelian terjadi")
+            }
             return true
         }
         Log("🔍 " label " belum ketemu, scroll... (" A_Index "/" maxScroll ")")

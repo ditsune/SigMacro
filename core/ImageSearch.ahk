@@ -200,3 +200,23 @@ FindRobuxItem(imageName, &outX, &outY) {
         CFG["region_80robux_x2"], CFG["region_80robux_y2"],
         &outX, &outY, "10,20,30,40,50,60,70,80,90,100,110,120,130")
 }
+
+CheckDontBuy() {
+    global CFG
+    return FindImage(A_ScriptDir "\image\dont_buy.png",
+        CFG["region_dontbuy_x1"], CFG["region_dontbuy_y1"],
+        CFG["region_dontbuy_x2"], CFG["region_dontbuy_y2"],
+        &fx, &fy, CFG["img_tol_fast"])
+}
+
+WaitForDontBuy(timeoutMs := 5000) {
+    elapsed := 0
+    Loop {
+        if CheckDontBuy()
+            return true
+        Sleep(200)
+        elapsed += 200
+        if (elapsed >= timeoutMs)
+            return false
+    }
+}

@@ -40,6 +40,11 @@ LoadConfig() {
     CFG["region_80robux_x2"] := Integer(IniRead(CFG_PATH, "Regions", "region_80robux_x2", 1920))
     CFG["region_80robux_y2"] := Integer(IniRead(CFG_PATH, "Regions", "region_80robux_y2", 1080))
 
+    CFG["region_dontbuy_x1"] := Integer(IniRead(CFG_PATH, "Regions", "region_dontbuy_x1", 0))
+    CFG["region_dontbuy_y1"] := Integer(IniRead(CFG_PATH, "Regions", "region_dontbuy_y1", 0))
+    CFG["region_dontbuy_x2"] := Integer(IniRead(CFG_PATH, "Regions", "region_dontbuy_x2", 1920))
+    CFG["region_dontbuy_y2"] := Integer(IniRead(CFG_PATH, "Regions", "region_dontbuy_y2", 1080))
+
     ; ── TIMING ────────────────────────────────────────────────
     CFG["delay_min"]      := Integer(IniRead(CFG_PATH, "Timing", "DelayMin",       200))
     CFG["delay_max"]      := Integer(IniRead(CFG_PATH, "Timing", "DelayMax",       350))

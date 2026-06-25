@@ -61,7 +61,7 @@ AppGui.SetFont("s9 c444444 Bold", "Segoe UI")
 StatusText := AppGui.Add("Text", "x10 y40 w380 Center vStatusText BackgroundTrans", "Ready")
 
 ; ── TAB BUTTONS ────────────────────────────────────────────
-tabLabels := ["Website", "Tele", "BC Code", "Tools"]
+tabLabels := ["Website", "Tele", "Backup Code", "Tools"]
 tabX      := [10, 105, 200, 295]
 
 AppGui.SetFont("s9 c000000 Norm", "Segoe UI")
@@ -97,31 +97,39 @@ MakeBtn(x, y, w, label) {
     c.Push(MakeSection(98,  "LOGIN (WEB)")*)
     c.Push(MakeBtn(22,  118, 178, "Login Clipboard"))   ; idx 3
     c.Push(MakeBtn(206, 118, 178, "Login Website"))     ; idx 4
+    c.Push(MakeBtn(22,  154, 178, "PW Web"))            ; idx 5
 
-    c.Push(MakeSection(158, "PASSWORD")*)
-    c.Push(MakeBtn(22,  178, 178, "PW Web"))            ; idx 7
+    c.Push(MakeSection(194, "BACKUP CODE (WEB)")*)
+    c.Push(MakeBtn(22,  214, 178, "BC Email Web"))      ; idx 8
+    c.Push(MakeBtn(206, 214, 178, "BC Retry Web"))      ; idx 9
+    c.Push(MakeBtn(22,  250, 178, "BC Authen Web"))     ; idx 10
+    c.Push(MakeBtn(206, 250, 178, "Copy BC Web"))       ; idx 11
 
-    c.Push(MakeSection(218, "BACKUP CODE (WEB)")*)
-    c.Push(MakeBtn(22,  238, 178, "BC Email Web"))       ; idx 10
-    c.Push(MakeBtn(206, 238, 178, "BC Retry Web"))       ; idx 11
-    c.Push(MakeBtn(22,  274, 178, "BC Authen Web"))         ; idx 12
-    c.Push(MakeBtn(206, 274, 178, "Copy BC Web"))       ; idx 13
+    c.Push(MakeSection(290, "ROBUX PURCHASE")*)
+    c.Push(MakeBtn(22,  310,  86, "Buy 80R"))           ; idx 14
+    c.Push(MakeBtn(114, 310,  86, "Buy 500R"))          ; idx 15
+    c.Push(MakeBtn(206, 310,  86, "Buy 1000R"))         ; idx 16
+    c.Push(MakeBtn(298, 310,  86, "Buy 2000R"))         ; idx 17
 
-    c.Push(MakeSection(318, "TOOLS")*)
-    c.Push(MakeBtn(22,  338,  86, "↺ Reload"))          ; idx 16
-    c.Push(MakeBtn(114, 338,  86, "✕ Exit"))            ; idx 17
-    c.Push(MakeBtn(206, 338, 178, "⚙ Settings"))        ; idx 18
+    c.Push(MakeSection(350, "TOOLS")*)
+    c.Push(MakeBtn(22,  370,  86, "↺ Reload"))          ; idx 20
+    c.Push(MakeBtn(114, 370,  86, "✕ Exit"))            ; idx 21
+    c.Push(MakeBtn(206, 370, 178, "⚙ Settings"))        ; idx 22
 
     c[3].OnEvent("Click",  (*) => GuiAction("Login Clipboard", DoLoginClipboardWeb))
     c[4].OnEvent("Click",  (*) => GuiAction("Login Website",   DoLoginWebsite))
-    c[7].OnEvent("Click",  (*) => GuiAction("PW Web",          PastePwClipboard))
-    c[10].OnEvent("Click", (*) => GuiAction("BC Email Web",     DoProsesBC1Web))
-    c[11].OnEvent("Click", (*) => GuiAction("BC Retry Web",     BCWithIncompatWeb))
-    c[12].OnEvent("Click", (*) => GuiAction("BC Authen Web",       BCAuthenWeb))
-    c[13].OnEvent("Click", (*) => GuiAction("Copy BC Web",     CopyBCWebsite))
-    c[16].OnEvent("Click", (*) => Reload())
-    c[17].OnEvent("Click", (*) => ExitApp())
-    c[18].OnEvent("Click", (*) => ShowSettingsDialog())
+    c[5].OnEvent("Click",  (*) => GuiAction("PW Web",          PastePwClipboard))
+    c[8].OnEvent("Click",  (*) => GuiAction("BC Email Web",   DoProsesBC1Web))
+    c[9].OnEvent("Click",  (*) => GuiAction("BC Retry Web",   BCWithIncompatWeb))
+    c[10].OnEvent("Click", (*) => GuiAction("BC Authen Web",  BCAuthenWeb))
+    c[11].OnEvent("Click", (*) => GuiAction("Copy BC Web",    CopyBCWebsite))
+    c[14].OnEvent("Click", (*) => GuiAction("Buy 80 Robux",  Beli80Robux))
+    c[15].OnEvent("Click", (*) => GuiAction("Buy 500 Robux", Beli500Robux))
+    c[16].OnEvent("Click", (*) => GuiAction("Buy 1000 Robux", Beli1000Robux))
+    c[17].OnEvent("Click", (*) => GuiAction("Buy 2000 Robux", Beli2000Robux))
+    c[20].OnEvent("Click", (*) => Reload())
+    c[21].OnEvent("Click", (*) => ExitApp())
+    c[22].OnEvent("Click", (*) => ShowSettingsDialog())
 
     TabControls[1] := c
 }
@@ -131,30 +139,38 @@ MakeBtn(x, y, w, label) {
     c := []
     c.Push(MakeSection(98,  "LOGIN (TELE)")*)
     c.Push(MakeBtn(22,  118, 178, "Login Clipboard"))   ; idx 3
+    c.Push(MakeBtn(206, 118, 178, "PW Tele"))           ; idx 4
 
-    c.Push(MakeSection(158, "PASSWORD")*)
-    c.Push(MakeBtn(22,  178, 178, "PW Tele"))           ; idx 6
+    c.Push(MakeSection(158, "BACKUP CODE (TELE)")*)
+    c.Push(MakeBtn(22,  178, 178, "BC Email Tele"))     ; idx 7
+    c.Push(MakeBtn(206, 178, 178, "BC Retry Tele"))     ; idx 8
+    c.Push(MakeBtn(22,  214, 178, "BC Authen"))         ; idx 9
+    c.Push(MakeBtn(206, 214, 178, "Copy BC"))           ; idx 10
 
-    c.Push(MakeSection(218, "BACKUP CODE (TELE)")*)
-    c.Push(MakeBtn(22,  238, 178, "BC Email Tele"))       ; idx 9
-    c.Push(MakeBtn(206, 238, 178, "BC Retry Tele"))       ; idx 10
-    c.Push(MakeBtn(22,  274, 178, "BC Authen"))         ; idx 11
-    c.Push(MakeBtn(206, 274, 178, "Copy BC"))           ; idx 12
+    c.Push(MakeSection(254, "ROBUX PURCHASE")*)
+    c.Push(MakeBtn(22,  274,  86, "Buy 80R"))           ; idx 13
+    c.Push(MakeBtn(114, 274,  86, "Buy 500R"))          ; idx 14
+    c.Push(MakeBtn(206, 274,  86, "Buy 1000R"))         ; idx 15
+    c.Push(MakeBtn(298, 274,  86, "Buy 2000R"))         ; idx 16
 
-    c.Push(MakeSection(318, "TOOLS")*)
-    c.Push(MakeBtn(22,  338,  86, "↺ Reload"))          ; idx 15
-    c.Push(MakeBtn(114, 338,  86, "✕ Exit"))            ; idx 16
-    c.Push(MakeBtn(206, 338, 178, "⚙ Settings"))        ; idx 17
+    c.Push(MakeSection(314, "TOOLS")*)
+    c.Push(MakeBtn(22,  334,  86, "↺ Reload"))          ; idx 19
+    c.Push(MakeBtn(114, 334,  86, "✕ Exit"))            ; idx 20
+    c.Push(MakeBtn(206, 334, 178, "⚙ Settings"))        ; idx 21
 
     c[3].OnEvent("Click",  (*) => GuiAction("Login Clipboard", DoLoginClipboard))
-    c[6].OnEvent("Click",  (*) => GuiAction("PW Tele",         PwdThenBC))
-    c[9].OnEvent("Click",  (*) => GuiAction("BC Email Tele",     DoProsesBC1))
-    c[10].OnEvent("Click", (*) => GuiAction("BC Retry Tele",     BCWithIncompat))
-    c[11].OnEvent("Click", (*) => GuiAction("BC Authen Tele",       BCAuthen))
-    c[12].OnEvent("Click", (*) => GuiAction("Copy BC Tele",         CopyBackupCodes))
-    c[15].OnEvent("Click", (*) => Reload())
-    c[16].OnEvent("Click", (*) => ExitApp())
-    c[17].OnEvent("Click", (*) => ShowSettingsDialog())
+    c[4].OnEvent("Click",  (*) => GuiAction("PW Tele",         PwdThenBC))
+    c[7].OnEvent("Click",  (*) => GuiAction("BC Email Tele",   DoProsesBC1))
+    c[8].OnEvent("Click",  (*) => GuiAction("BC Retry Tele",   BCWithIncompat))
+    c[9].OnEvent("Click",  (*) => GuiAction("BC Authen Tele",  BCAuthen))
+    c[10].OnEvent("Click", (*) => GuiAction("Copy BC Tele",    CopyBackupCodes))
+    c[13].OnEvent("Click", (*) => GuiAction("Buy 80 Robux",  Beli80Robux))
+    c[14].OnEvent("Click", (*) => GuiAction("Buy 500 Robux", Beli500Robux))
+    c[15].OnEvent("Click", (*) => GuiAction("Buy 1000 Robux", Beli1000Robux))
+    c[16].OnEvent("Click", (*) => GuiAction("Buy 2000 Robux", Beli2000Robux))
+    c[19].OnEvent("Click", (*) => Reload())
+    c[20].OnEvent("Click", (*) => ExitApp())
+    c[21].OnEvent("Click", (*) => ShowSettingsDialog())
 
     TabControls[2] := c
 }
@@ -209,7 +225,7 @@ MakeBtn(x, y, w, label) {
     c.Push(MakeBtn(206, 118,  86, "⏸ Pause"))           ; idx 5
     c.Push(MakeBtn(298, 118,  86, "⚙ Settings"))        ; idx 6
 
-    c.Push(MakeSection(158, "ROBLOX")*)
+    c.Push(MakeSection(158, "ROBUX PURCHASE")*)
     c.Push(MakeBtn(22,  178,  86, "Buy 80R"))           ; idx 9
     c.Push(MakeBtn(114, 178,  86, "Buy 500R"))          ; idx 10
     c.Push(MakeBtn(206, 178,  86, "Buy 1000R"))         ; idx 11
@@ -287,33 +303,39 @@ UILog("[" FormatTime(, "HH:mm:ss") "] Hotkeys enabled — Sigmacro v2.1 ready")
 SetTimer(() => CheckForUpdate(true), -3000)
 
 ; ── HOTKEYS ────────────────────────────────────────────────
-^u:: HotkeyAction("Login Clipboard",  DoLoginClipboard)
-^m:: HotkeyAction("Login Website",    DoLoginWebsite)
-^p:: HotkeyAction("PW Tele",          PwdThenBC)
-^q:: HotkeyAction("PW Web",           PastePwClipboard)
-^o:: HotkeyAction("BC Email",      DoProsesBC1)
-^e:: HotkeyAction("BC Retry",      BCWithIncompat)
-^k:: HotkeyAction("BC Authen",        BCAuthen)
-^i:: HotkeyAction("Copy BC",          CopyBackupCodes)
-^+a:: HotkeyAction("Copy BC Website", CopyBCWebsite)
-^+u:: HotkeyAction("Login Clipboard Web", DoLoginClipboardWeb)
-^+o:: HotkeyAction("BC Email Web",     DoProsesBC1Web)
-^+e:: HotkeyAction("BC Retry Web",     BCWithIncompatWeb)
-^+k:: HotkeyAction("BC Authen Web",       BCAuthenWeb)
-^+1:: HotkeyAction("Copy BC Web",         CopyBCWebsite)
-^+r:: HotkeyAction("Buy 80 Robux", Beli80Robux)
-^+8:: HotkeyAction("Buy 80 Robux",   Beli80Robux)
-^+5:: HotkeyAction("Buy 500 Robux",  Beli500Robux)
-^+2:: HotkeyAction("Buy 1000 Robux", Beli1000Robux)
-^+3:: HotkeyAction("Buy 2000 Robux", Beli2000Robux)
+; TELE
+^!u:: HotkeyAction("Login Clipboard",  DoLoginClipboard)
+^!p:: HotkeyAction("PW Tele",          PwdThenBC)
+^!o:: HotkeyAction("BC Email",         DoProsesBC1)
+^!e:: HotkeyAction("BC Retry",         BCWithIncompat)
+^!k:: HotkeyAction("BC Authen",        BCAuthen)
+^!i:: HotkeyAction("Copy BC",          CopyBackupCodes)
+
+; WEB
+^!+u:: HotkeyAction("Login Clipboard Web", DoLoginClipboardWeb)
+^!m:: HotkeyAction("Login Website",        DoLoginWebsite)
+^!q:: HotkeyAction("PW Web",               PastePwClipboard)
+^!+o:: HotkeyAction("BC Email Web",        DoProsesBC1Web)
+^!+e:: HotkeyAction("BC Retry Web",        BCWithIncompatWeb)
+^!+k:: HotkeyAction("BC Authen Web",       BCAuthenWeb)
+^!1:: HotkeyAction("Copy BC Web",          CopyBCWebsite)
+
+; ROBLOX
+^!r:: HotkeyAction("Buy 80 Robux",   Beli80Robux)
+^!5:: HotkeyAction("Buy 500 Robux",  Beli500Robux)
+^!2:: HotkeyAction("Buy 1000 Robux", Beli1000Robux)
+^!3:: HotkeyAction("Buy 2000 Robux", Beli2000Robux)
+
+; SYSTEM (tetap)
 ^b:: Reload()
 ^Esc:: ExitApp()
 ^F12:: TogglePause()
 
-^j:: ShowMousePos()
-^t:: DebugFind2FA()
-^y:: DebugWinPos()
-^0:: MsgBox(CheckIncompatible() ? "Incompatible KEDETECT" : "Tidak kedetect", "Debug")
+; DEBUG
+^!j:: ShowMousePos()
+^!t:: DebugFind2FA()
+^!y:: DebugWinPos()
+^!0:: MsgBox(CheckIncompatible() ? "Incompatible KEDETECT" : "Tidak kedetect", "Debug")
 
 ; ============================================================
 ;  PAUSE
@@ -417,7 +439,7 @@ UpdateStatus(status) {
     else if (status = "Paused")
         StatusText.Text := "⏸ Paused"
     else
-        StatusText.Text := "✓ Ready"
+        StatusText.Text := "Ready"
 }
 
 UILog(line) {
