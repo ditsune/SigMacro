@@ -142,6 +142,20 @@ directClick(x, y, variance := 3) {
     HumanClickMedSlow(1494, 377, 9)
     RandSleep(60, 140)
     HumanClickMedSlow(1494, 377, 9)
+
+    Sleep(150)
+    directClick(1352, 806)
+    Sleep(150)
+    Send("^v")
+    Sleep(400)
+    Send("^a")
+    Sleep(350)
+    Send("{Backspace}")
+    Sleep(350)
+    Send("{Enter}")
+    
+
+
 }
 
 ; ────────────────────────────────────────────────────────────

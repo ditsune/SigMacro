@@ -1,6 +1,9 @@
 ; ============================================================
 ;  core/Mouse.ahk — Human-like mouse movement
-;  Semua timing baca dari CFG (shared/Config.ahk)
+;  FIX: Click() harus pakai koordinat eksplisit di AHK v2
+;       Click() kosong = klik di posisi mouse saat itu,
+;       tapi ada race condition dengan MouseMove speed=0.
+;       Solusi: selalu pass x,y ke Click langsung.
 ; ============================================================
 
 RandInt(lo, hi) {
@@ -15,7 +18,6 @@ RandSleep(lo, hi) {
     Sleep(RandInt(lo, hi))
 }
 
-; Delay standar pakai config
 Delay() {
     global CFG
     RandSleep(CFG["delay_min"], CFG["delay_max"])
@@ -34,10 +36,12 @@ BezierMove(x1, y1, x2, y2, steps, sleepMs) {
         MouseMove(cx, cy, 0)
         Sleep(sleepMs)
     }
+    ; Pastikan mouse tepat di target sebelum klik
     MouseMove(x2, y2, 0)
-    Sleep(10)
+    Sleep(15)  ; sedikit settle time — cukup untuk OS flush mouse event
 }
 
+; ── FIX UTAMA: pass tx/ty langsung ke Click ──────────────────
 HumanClick(x, y, variance := 8) {
     global CFG
     MouseGetPos(&sx, &sy)
@@ -47,7 +51,8 @@ HumanClick(x, y, variance := 8) {
                RandInt(CFG["bez_steps_min"], CFG["bez_steps_max"]),
                RandInt(CFG["bez_sleep_min"], CFG["bez_sleep_max"]))
     Sleep(RandInt(CFG["click_pre"], CFG["click_pre"] + 15))
-    Click()
+    ; FIX: koordinat eksplisit, bukan Click() kosong
+    Click(tx " " ty)
     Sleep(RandInt(CFG["click_post"], CFG["click_post"] + 25))
 }
 
@@ -60,21 +65,27 @@ HumanDoubleClick(x, y, variance := 8) {
                RandInt(CFG["bez_steps_min"], CFG["bez_steps_max"]),
                RandInt(CFG["bez_sleep_min"], CFG["bez_sleep_max"]))
     Sleep(RandInt(CFG["click_pre"], CFG["click_pre"] + 15))
-    Click(2)
+    ; FIX: koordinat eksplisit
+    Click(tx " " ty " 2")
     Sleep(RandInt(CFG["click_post"], CFG["click_post"] + 25))
 }
 
+; DirectClick: tanpa bezier, langsung ke koordinat
+; Tetap pakai koordinat eksplisit
 DirectClick(x, y) {
-    global CFG
-    MouseMove(Integer(x), Integer(y), 0)
+    ix := Integer(x)
+    iy := Integer(y)
+    MouseMove(ix, iy, 0)
     Sleep(20)
-    Click()
+    Click(ix " " iy)
     Sleep(30)
 }
 
 DirectDoubleClick(x, y) {
-    MouseMove(Integer(x), Integer(y), 0)
+    ix := Integer(x)
+    iy := Integer(y)
+    MouseMove(ix, iy, 0)
     Sleep(20)
-    Click(2)
+    Click(ix " " iy " 2")
     Sleep(30)
 }

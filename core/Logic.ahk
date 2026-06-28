@@ -116,17 +116,15 @@ AmbilPasswordDanPaste() {
     HumanClick(COORD["incompatible_x"], COORD["incompatible_y"])
     Delay()
     HumanDoubleClick(COORD["login_pass_x"], COORD["login_pass_y"], 2)
-    Sleep(200)
+    Sleep(350)
     Send("^a")
-    Delay()
+    Sleep(350)
     Send("^v")
     Delay()
     Send("{Enter}")
     Log("✅ Password dipaste")
     return true
 }
-
-
 
 ProsesBackupCode(maxRetry := 0) {
     global CFG
@@ -264,6 +262,46 @@ BCAuthen() {
         Log("✅ Selesai")
 }
 
+; ── Helper: activate Roblox UWP dan tunggu keyboard focus beneran ──
+ActivateRobloxAndWait() {
+    ; Cari window Roblox UWP
+    hwnd := WinExist("ahk_exe RobloxPlayerBeta.exe")
+    if !hwnd {
+        Log("⚠️ Roblox window tidak ditemukan, lanjut tanpa activate")
+        return
+    }
+    WinActivate("ahk_id " hwnd)
+    ; Tunggu sampe beneran jadi foreground window
+    WinWaitActive("ahk_id " hwnd, , 3)
+    ; Extra settle time untuk UWP focus isolation
+    ; UWP butuh ~300-500ms setelah WinActivate sebelum keyboard input diterima
+    Sleep(450)
+}
+
+; ── Helper: klik field, konfirmasi focused, baru send ──────────────
+ClickFieldAndFocus(x, y, extraSettle := 200) {
+    DirectClick(x, y)
+    Sleep(extraSettle)
+    ; Klik sekali lagi kalau pertama kadang miss focus di UWP
+    DirectClick(x, y)
+    Sleep(100)
+}
+
+; ── Helper: isi field dengan clear dulu, paste dari Win+V ──────────
+FillFieldWinV(clipIndex_x, clipIndex_y) {
+    global CFG
+    ; Pastikan field kosong dulu
+    Send("^a")
+    Sleep(150)
+    Send("{Delete}")
+    Sleep(150)
+    ; Buka Win+V dan pilih item
+    Send("#v")
+    Sleep(CFG["winv_delay"])
+    DirectClick(clipIndex_x, clipIndex_y)
+    Sleep(300)
+}
+
 DoLoginClipboard() {
     global COORD, CFG
     HumanClick(COORD["login_focus_x"], COORD["login_focus_y"])
@@ -300,17 +338,21 @@ DoLoginClipboard() {
 
 DoLoginWebsite() {
     global COORD, CFG
-    DirectClick(COORD["web_tab1_x"], COORD["web_tab1_y"])
+
+    HumanClick(COORD["web_tab1_x"], COORD["web_tab1_y"])
     Sleep(350)
-    DirectClick(COORD["web_tab2_x"], COORD["web_tab2_y"])
+    HumanClick(COORD["web_tab2_x"], COORD["web_tab2_y"])
     Sleep(350)
-    DirectClick(COORD["web_tab3_x"], COORD["web_tab3_y"])
+    HumanClick(COORD["web_tab3_x"], COORD["web_tab3_y"])
     Sleep(350)
+
+    ActivateRobloxAndWait()
+
     HumanClick(COORD["login_focus_x"], COORD["login_focus_y"])
     Delay()
     HumanClick(COORD["login_pass_x"],  COORD["login_pass_y"])
-    Delay()
-    HumanDoubleClick(COORD["login_user_x"],  COORD["login_user_y"])
+    Sleep(250)
+    HumanClick(COORD["login_user_x"],  COORD["login_user_y"])
     Sleep(50)
     Send("^a")
     Sleep(50)
@@ -318,15 +360,17 @@ DoLoginWebsite() {
     Sleep(50)
     Send("#v")
     Sleep(CFG["winv_delay"])
-    DirectClick(COORD["login_submit1_x"], COORD["login_submit1_y"])
-    Sleep(350)
+    HumanClick(COORD["login_submit1_x"], COORD["login_submit1_y"])
+    Sleep(250)
     Send("{Tab}")
     Sleep(200)
     Send("^a")
-    Delay()
+    Sleep(150)
+    Send("{Delete}")
+    Sleep(200)
     Send("#v")
     Sleep(CFG["winv_delay"])
-    DirectClick(COORD["login_submit2_x"], COORD["login_submit2_y"])
+    HumanClick(COORD["login_submit2_x"], COORD["login_submit2_y"])
     RandSleep(CFG["submit_delay"], CFG["submit_delay"] + 100)
     Send("{Enter}")
     CopyBCWebsite()
@@ -344,39 +388,52 @@ DoLoginWebsite() {
 
 LoginWebRoblox() {
     global COORD, CFG
+
+    ; Ini login di browser Roblox web — bukan UWP
+    ; Focus ke browser dulu
     HumanClick(553, 838)
     Sleep(300)
+
+    ; Klik field username di web
     HumanClick(COORD["web_user_x"], COORD["web_user_y"])
     Sleep(300)
     Send("#v")
     Sleep(400)
-    HumanClick(477, 673) ; klik ke clipboard item ke 3 (username)
+    HumanClick(477, 673) ; klik item clipboard (username)
     Sleep(350)
+
     Send("{Tab}")
     Sleep(200)
+
     Send("#v")
     Sleep(400)
-    HumanClick(552, 589) ; klik ke clipboard item ke 2 (password)
-    Sleep(200)
+    HumanClick(552, 589) ; klik item clipboard (password)
+    Sleep(300)
     Send("{Enter}")
+    Log("🚀 Login Web Roblox dikirim")
 }
 
 PastePwClipboardWeb() {
     global COORD, CFG
     DirectClick(578, 333)
     Sleep(200)
-    HumanClick(COORD["winv_focus_x"],  COORD["winv_focus_y"])
+
+    ActivateRobloxAndWait()
+
+    HumanClick(COORD["winv_focus_x"],    COORD["winv_focus_y"])
     Delay()
-    HumanClick(COORD["login_pass2_x"], COORD["login_pass2_y"])
+    HumanClick(COORD["login_pass2_x"],   COORD["login_pass2_y"])
     Delay()
-    HumanClick(COORD["incompatible_x"], COORD["incompatible_y"])
-    Delay()
-    HumanClick(COORD["login_pass_x"], COORD["login_pass_y"])
+    HumanClick(COORD["incompatible_x"],  COORD["incompatible_y"])
+    Sleep(350)
+    HumanClick(COORD["login_pass_x"],    COORD["login_pass_y"])
     Sleep(50)
     Send("^a")
     Sleep(50)
     Send("^a")
     Sleep(50)
+    Send("{Delete}")
+    Sleep(100)
     Send("^v")
     Delay()
     Send("{Enter}")
@@ -405,19 +462,24 @@ PastePwClipboard() {
     global COORD, CFG
     DirectClick(578, 333)
     Sleep(200)
-    HumanClick(COORD["winv_focus_x"],  COORD["winv_focus_y"])
+
+    ActivateRobloxAndWait()
+
+    HumanClick(COORD["winv_focus_x"],   COORD["winv_focus_y"])
     Delay()
-    HumanClick(COORD["login_pass2_x"], COORD["login_pass2_y"])
+    HumanClick(COORD["login_pass2_x"],  COORD["login_pass2_y"])
     Delay()
-    HumanClick(COORD["login_pass3_x"], COORD["login_pass3_y"])
+    HumanClick(COORD["login_pass3_x"],  COORD["login_pass3_y"])
     Delay()
-    HumanClick(COORD["login_pass_x"], COORD["login_pass_y"])
+    HumanClick(COORD["login_pass_x"],   COORD["login_pass_y"])
     Sleep(50)
     Send("^a")
     Sleep(50)
     Send("^a")
     Sleep(50)
-    Send("#v")
+    Send("{Delete}")
+    Sleep(100)
+    Send("^v")
     Delay()
     Send("{Enter}")
     Log("🚀 Paste PW selesai")
@@ -427,7 +489,7 @@ PastePwClipboard() {
         return
     }
     Delay()
-    ProsesBackupCodeWeb()                  ; ← pakai Web (Ctrl+Q saat incompatible)
+    ProsesBackupCodeWeb()
 }
 
 PastePwTelegram() {
@@ -435,20 +497,25 @@ PastePwTelegram() {
     DirectClick(COORD["tele_click1_x"], COORD["tele_click1_y"])
     Sleep(200)
     DirectClick(COORD["tele_click2_x"], COORD["tele_click2_y"])
+    Sleep(300)
+
+    ActivateRobloxAndWait()
+
+    HumanClick(COORD["winv_focus_x"],   COORD["winv_focus_y"])
     Delay()
-    HumanClick(COORD["winv_focus_x"],  COORD["winv_focus_y"])
+    HumanClick(COORD["login_pass2_x"],  COORD["login_pass2_y"])
     Delay()
-    HumanClick(COORD["login_pass2_x"], COORD["login_pass2_y"])
+    HumanClick(COORD["login_pass3_x"],  COORD["login_pass3_y"])
     Delay()
-    HumanClick(COORD["login_pass3_x"], COORD["login_pass3_y"])
-    Delay()
-    HumanClick(COORD["login_pass_x"], COORD["login_pass_y"])
+    HumanClick(COORD["login_pass_x"],   COORD["login_pass_y"])
     Sleep(50)
     Send("^a")
     Sleep(50)
     Send("^a")
     Sleep(50)
-    Send("#v")
+    Send("{Delete}")
+    Sleep(100)
+    Send("^v")
     Delay()
     Send("{Enter}")
     Log("🚀 Paste PW Telegram selesai")
@@ -776,11 +843,14 @@ BCAuthenWeb() {
 
 DoLoginClipboardWeb() {
     global COORD, CFG
+
+    ActivateRobloxAndWait()
+
     HumanClick(COORD["login_focus_x"], COORD["login_focus_y"])
     Delay()
     HumanClick(COORD["login_pass_x"],  COORD["login_pass_y"])
     Sleep(600)
-    HumanClick(COORD["login_user_x"],  COORD["login_user_y"])
+    HumanDoubleClick(COORD["login_user_x"], COORD["login_user_y"])
     Sleep(50)
     Send("^a")
     Sleep(50)
@@ -791,9 +861,11 @@ DoLoginClipboardWeb() {
     DirectClick(COORD["login_submit1_x"], COORD["login_submit1_y"])
     Sleep(350)
     Send("{Tab}")
-    Sleep(200)
+    Sleep(50)
     Send("^a")
-    Delay()
+    Sleep(50)
+    Send("^a")
+    Sleep(50)
     Send("#v")
     Sleep(CFG["winv_delay"])
     DirectClick(COORD["login_submit2_x"], COORD["login_submit2_y"])
@@ -823,10 +895,10 @@ BeliRobux(imageName, label) {
     Log("✅ Roblox Home terdeteksi")
 
     ; Step 2: Double klik logo Robux
-    DirectClick(COORD["robux_logo_x"], COORD["robux_logo_y"])
+    HumanClick(COORD["robux_logo_x"], COORD["robux_logo_y"])
     Sleep(200)
     DirectClick(COORD["robux_logo_x"], COORD["robux_logo_y"])
-    Sleep(2000)
+    Sleep(1500)
 
     ; Step 3: Cari item dengan scroll
     maxScroll := 3
