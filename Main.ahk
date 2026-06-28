@@ -355,15 +355,8 @@ F12:: Reload()
 ^!j:: ShowMousePos()
 ^!t:: DebugFind2FA()
 ^!y:: DebugWinPos()
-^!0:: MsgBox(CheckIncompatible() ? "Incompatible KEDETECT" : "Tidak kedetect", "Debug")
-^j:: {
-    MouseGetPos(&mx, &my)
-    col := PixelGetColor(mx, my, "RGB")
-    hex := Format("0x{:06X}", col)
-    UILog("[PIXEL] x=" mx " y=" my " color=" hex)
-    MsgBox("X: " mx "`nY: " my "`nColor: " hex, "PixelGetColor Debug")
-    A_Clipboard := hex
-}
+^!0:: DebugIncompatible()
+^j:: DebugCoorPixel()
 
 ; ============================================================
 ;  PAUSE
@@ -408,6 +401,19 @@ DebugWinPos() {
     title := WinGetTitle("A")  ; tanpa &, langsung return string
     UILog("[DEBUG] Window: " SubStr(title, 1, 30) " | " tw "x" th)
     MsgBox("Window: " title "`nX: " tx " Y: " ty " W: " tw " H: " th, "Window Pos")
+}
+
+DebugCoorPixel() {
+    MouseGetPos(&mx, &my)
+    col := PixelGetColor(mx, my, "RGB")
+    hex := Format("0x{:06X}", col)
+    UILog("[PIXEL] x=" mx " y=" my " color=" hex)
+    MsgBox("X: " mx "`nY: " my "`nColor: " hex, "PixelGetColor Debug")
+    A_Clipboard := hex
+}
+
+DebugIncompatible() {
+    MsgBox(CheckIncompatible() ? "Incompatible KEDETECT" : "Tidak kedetect", "Debug")
 }
 
 ; ============================================================

@@ -346,8 +346,6 @@ DoLoginWebsite() {
     HumanClick(COORD["web_tab3_x"], COORD["web_tab3_y"])
     Sleep(350)
 
-    ActivateRobloxAndWait()
-
     HumanClick(COORD["login_focus_x"], COORD["login_focus_y"])
     Delay()
     HumanClick(COORD["login_pass_x"],  COORD["login_pass_y"])
@@ -392,13 +390,13 @@ LoginWebRoblox() {
     ; Ini login di browser Roblox web — bukan UWP
     ; Focus ke browser dulu
     HumanClick(553, 838)
-    Sleep(300)
+    Sleep(350)
 
     ; Klik field username di web
     HumanClick(COORD["web_user_x"], COORD["web_user_y"])
     Sleep(300)
     Send("#v")
-    Sleep(400)
+    Sleep(250)
     HumanClick(477, 673) ; klik item clipboard (username)
     Sleep(350)
 
@@ -406,7 +404,7 @@ LoginWebRoblox() {
     Sleep(200)
 
     Send("#v")
-    Sleep(400)
+    Sleep(250)
     HumanClick(552, 589) ; klik item clipboard (password)
     Sleep(300)
     Send("{Enter}")
@@ -887,6 +885,12 @@ DoLoginClipboardWeb() {
 BeliRobux(imageName, label) {
     global COORD, CFG
 
+    HumanClick(993, 111)
+    Sleep(100)
+    HumanClick(993, 111)
+    Sleep(50)
+    HumanClick(1030, 101)
+
     ; Step 1: Cek Roblox Home
     if !CheckRobloxHome() {
         Log("❌ Roblox Home tidak terdeteksi")
@@ -894,11 +898,12 @@ BeliRobux(imageName, label) {
     }
     Log("✅ Roblox Home terdeteksi")
 
+    Sleep(100)
     ; Step 2: Double klik logo Robux
-    HumanClick(COORD["robux_logo_x"], COORD["robux_logo_y"])
-    Sleep(200)
     DirectClick(COORD["robux_logo_x"], COORD["robux_logo_y"])
-    Sleep(1500)
+    Sleep(200)
+    HumanClick(COORD["robux_logo_x"], COORD["robux_logo_y"])
+    Sleep(1200)
 
     ; Step 3: Cari item dengan scroll
     maxScroll := 3
@@ -970,11 +975,11 @@ HotkeySheetBelom() {
     Send("{Left}")
     Sleep(100)
     Send("d")
-    Sleep(300)
+    Sleep(200)
     Send("{Down}")
     Sleep(200)
     Send("{Enter}")
-    Sleep(200)
+    Sleep(150)
     Send("{Up}")
     Sleep(50)
     Send("^{Left}")
@@ -982,4 +987,73 @@ HotkeySheetBelom() {
     Send("^{Left}")
     Sleep(200)
     Send("{Space}")
+}
+
+; ────────────────────────────────────────────────────────────
+;  CTRL+G — RUN SNIPPET (Dev Console)
+; ────────────────────────────────────────────────────────────
+^g:: {
+    Send("^+i")
+    RandSleep(450, 700)
+
+    HumanClick(1049, 188)
+    RandSleep(60, 140)
+    HumanClick(1049, 188)
+    RandSleep(300, 550)
+
+    Send("^{Enter}")
+    Sleep(100)
+    Send("^{Enter}")
+    RandSleep(350, 450)
+
+    HumanClick(1832, 113)
+    RandSleep(1100, 1500)
+    HumanClick(985, 45)
+    RandSleep(70, 180)
+    HumanClick(997, 238)
+}
+
+; ────────────────────────────────────────────────────────────
+;  CTRL+L — LOGOUT XBOX
+; ────────────────────────────────────────────────────────────
+^l:: {
+    RandSleep(220, 500)
+
+    HumanClick(985, 45)
+    RandSleep(70, 180)
+
+    HumanClick(1001, 367)
+    RandSleep(60, 140)
+    HumanClick(1001, 367)
+    RandSleep(70, 200)
+
+    HumanClick(1047, 365)
+    RandSleep(70, 200)
+
+    scrollCount := RandInt(7, 13)
+    Loop scrollCount {
+        Send("{WheelDown}")
+        Sleep(RandInt(18, 40))
+    }
+
+    RandSleep(120, 280)
+
+    HumanClick(1451, 410)
+    RandSleep(60, 140)
+    HumanClick(1451, 410)
+    RandSleep(70, 200)
+
+    HumanDoubleClick(1494, 377)
+    RandSleep(60, 140)
+
+    Sleep(150)
+    DirectClick(1352, 806)
+    Sleep(150)
+    Send("^v")
+    Sleep(400)
+    Send("^a")
+    Sleep(350)
+    Send("{Backspace}")
+    Sleep(350)
+    Send("{Enter}")
 }
